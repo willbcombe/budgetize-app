@@ -1,8 +1,13 @@
 //entry point? where do we start
     //node stuff expose an object to another file
     const path = require('path');
-    
-    module.exports = {
+    const ExtractTextPlugin = require ('extract-text-webpack-plugin');
+    //gunna return and export a function that returns webpack config object
+    module.exports = (env) => {
+        const isProduction = env === 'production';
+        const CSSExtract = new ExtractTextPlugin('styles.css');
+    console.log ('env', env)
+    return {
         entry: './src/app.js',
         output: {
             //absolute path to output from entry
@@ -17,18 +22,34 @@
                 exclude: /node_modules/
             },{
                 test: /\.s?css$/, //check if file ends with scss or css
-                use: [ //allows array of loaders
-                    'style-loader',
-                    'css-loader',
-                    'sass-loader'
-                ]
+                //array of loaders
+                use:  CSSExtract.extract({
+                    use:[
+                        {
+                            loader: 'css-loader',
+                            options: {
+                              sourceMap: true
+                            }
+                          },
+                          {
+                            loader: 'sass-loader',
+                            options: {
+                              sourceMap: true
+                            }
+                          }
+                    ]
+                })   
             }]
         },
+        plugins: [
+            CSSExtract
+        ],
         //source map check documentaion on webpack
-        devtool: 'cheap-module-eval-source-map',
+        devtool: isProduction ?  'source-map' : 'inline-source-map',
         devServer: {
             contentBase: path.join(__dirname, 'public'), 
             historyApiFallback: true
         }
+    };
     };
     //where do we output? 

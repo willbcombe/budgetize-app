@@ -4,18 +4,20 @@ import {DateRangePicker} from 'react-dates';
 import {setTextFilter, sortByDate, sortByAmount, setStartDate, setEndDate} from '../actions/filters';
 
 export class ExpenseListFilters extends React.Component{
+
     state = {
         calendarFocused: null,
     };
     
-    onDatesChange = ({startDate, endDate}) => {
+    onDatesChange = ({ startDate, endDate }) => {
         this.props.setStartDate(startDate);
         this.props.setEndDate(endDate);
     };
 
     onFocusChange = (calendarFocused) => {
         this.setState(()=>({calendarFocused}));
-    }
+    };
+
     onTextChange = (e) => {
         this.props.setTextFilter(e.target.value);
     };
@@ -28,11 +30,11 @@ export class ExpenseListFilters extends React.Component{
         }
     };
 
-    render() {
+    render(){
         return(
             <div>
-                <input
-                    type ='text'
+                <input 
+                    //type ="text"
                     value={this.props.filters.text} 
                     onChange={this.onTextChange}
                 />
@@ -55,14 +57,14 @@ export class ExpenseListFilters extends React.Component{
                 />
             </div>
         );
-    };
-}
-
-
-
-const mapStateToProps = (state) => {
-    filters: state.filters
+    }
 };
+
+
+
+const mapStateToProps = (state) => ({
+    filters: state.filters
+});
 
 const mapDispatchToProps = (dispatch) => ({
     setTextFilter: (text) => dispatch(setTextFilter(text)),
